@@ -1,0 +1,36 @@
+{% extends "base.htm" %}
+{% block title %}This is an sensor data page{% endblock %}
+
+{% block content %}
+
+	<div class="container">
+		<h2>Collect Control</h2>
+		<button type="button" class="btn btn-primary active">Start collect</button>
+		<button type="button" class="btn btn-primary" disabled>Stop collect</button>
+	</div>
+ 	<table id="sensors_table" style="width:100%">
+  <tr>
+    <th>Sensor ID</th>
+    <th>Battery</th> 
+    <th>Light sensor 1</th>
+    <th>Light sensor 2</th>
+    <th>Temperature</th>
+    <th>Humidity</th>
+    <th>RSSI</th>
+  </tr>
+	
+	{% for sensor in sensors %}
+	<tr id="sensor{{sensor.node_id}}">
+			<th id="node_id">{{ sensor.node_id }}</th>
+			<th id="battery_voltage">{{ sensor.battery_voltage }}</th>
+			<th id="light1">{{ sensor.light1 }}</th>
+			<th id="light2">{{ sensor.light2 }}</th>
+			<th id="temperature">{{ sensor.temperature }}</th>
+			<th id="humidity">{{ sensor.humidity }}</th>
+			<th id="rssi">{{ sensor.rssi }}</th>
+	</tr>
+  {% endfor %}
+  </table> 
+
+{% endblock %}
+

@@ -1,0 +1,59 @@
+{% extends 'bootstrap/base.html' %}
+
+{% block title %}
+    {% if title %}{{ title }} - Manager page{% else %}{{ _('Sensor Manager') }}{% endif %}
+{% endblock %}
+
+{% block navbar %}
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Sensor Manager</a>
+    </div>
+    <ul class="nav navbar-nav">
+				<li class="active"><a href="{{ url_for('index') }}">Home</a></li>
+				<li><a href="{{ url_for('sensor_info') }}">Sensor Info</a></li>
+      <li><a href="#">Page 2</a></li>
+      <li><a href="#">Page 3</a></li>
+    </ul>
+  </div>
+</nav>
+{% endblock %}
+
+{% block scripts %}
+{{super()}}
+<script src="//ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="{{
+  url_for('static', filename='jquery-3.4.0.js') }}">\x3C/script>')</script>
+
+<script>
+	function executeQuery() {
+		$.getJSON({
+			url: "{{url_for('sensor_update')}}",
+			dataType: "json",
+			success: function(data) {
+				$.each(data, function(key, sensor){
+					var old_row = $('#sensor' + sensor.node_id);
+					if(old_row){
+						console.log("[DEBUG]insert row: " + sensor.node_id)
+						$.each(sensor, function(key, value){
+							old_row.find(key).replaceWith(value);
+						})
+					}
+
+					//not found node id, insert new element
+					var new_row = $() 
+				})
+			}
+		});
+		if ($(location).attr('pathname') == "{{ url_for('sensor_info') }}"){
+			setTimeout(executeQuery, 5000); // you could choose not to continue on failure...
+		}
+	}
+
+	$(document).ready(function() {
+		// run the first time; all subsequent calls will take care of themselves
+		setTimeout(executeQuery, 5000);
+	});
+</script>
+{% endblock %} 
