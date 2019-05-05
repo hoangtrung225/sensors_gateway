@@ -10,24 +10,24 @@
 	</div>
  	<table id="sensors_table" style="width:100%">
   <tr>
-    <th>Sensor ID</th>
-    <th>Battery</th> 
-    <th>Light sensor 1</th>
-    <th>Light sensor 2</th>
-    <th>Temperature</th>
-    <th>Humidity</th>
-    <th>RSSI</th>
+    <td>Sensor ID</td>
+    <td>Battery</td> 
+    <td>Light sensor 1</td>
+    <td>Light sensor 2</td>
+    <td>Temperature</td>
+    <td>Humidity</td>
+    <td>RSSI</td>
   </tr>
 	
 	{% for sensor in sensors %}
-	<tr id="sensor{{sensor.node_id}}">
-			<th id="node_id">{{ sensor.node_id }}</th>
-			<th id="battery_voltage">{{ sensor.battery_voltage }}</th>
-			<th id="light1">{{ sensor.light1 }}</th>
-			<th id="light2">{{ sensor.light2 }}</th>
-			<th id="temperature">{{ sensor.temperature }}</th>
-			<th id="humidity">{{ sensor.humidity }}</th>
-			<th id="rssi">{{ sensor.rssi }}</th>
+	<tr>
+			<td id="node_id">{{ sensor.node_id }}</td>
+			<td id="battery_voltage">{{ sensor.battery_voltage }}</td>
+			<td id="light1">{{ sensor.light1 }}</td>
+			<td id="light2">{{ sensor.light2 }}</td>
+			<td id="temperature">{{ sensor.temperature }}</td>
+			<td id="humidity">{{ sensor.humidity }}</td>
+			<td id="rssi">{{ sensor.rssi }}</td>
 	</tr>
   {% endfor %}
   </table> 

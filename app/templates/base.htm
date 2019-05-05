@@ -32,17 +32,29 @@
 			url: "{{url_for('sensor_update')}}",
 			dataType: "json",
 			success: function(data) {
-				$.each(data, function(key, sensor){
-					var old_row = $('#sensor' + sensor.node_id);
-					if(old_row){
-						console.log("[DEBUG]insert row: " + sensor.node_id)
-						$.each(sensor, function(key, value){
-							old_row.find(key).replaceWith(value);
-						})
-					}
 
-					//not found node id, insert new element
-					var new_row = $() 
+				//loop table and insert element
+				var table = $("#sensors_table");
+				$.each(data, function(key, sensor){
+					var found = false;
+					table.find('tr').each(function (key, val) {
+							if ($(this).find("#node_id").text() == sensor["node_id"]){
+								$.each(sensor, function(key, value){
+									$(this).find(key).replaceWith(value);
+								})
+								found = true;
+								console.log("[DEBUG]Insert to " + $(this).find("#node_id").text());
+							}
+					})
+
+					if (found == false){
+						var row = $('<tr>')
+						$.each(sensor, function(key, value){
+							row.append($('<td id=' + key + '>' + value + '</td>'));
+						})
+						console.log("Append new row");
+						table.append(row);	
+					}
 				})
 			}
 		});
