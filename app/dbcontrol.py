@@ -38,6 +38,7 @@ class SensorDB():
 
     @staticmethod
     def insert_data(data):
+        """Insert dict sensor object to database"""
         print("[DEBUG]Insert to database sensor info {}".format(data['node_id'])) 
         sensor = Sensor()
         for field in SensorDB.dict_struct:
