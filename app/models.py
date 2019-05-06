@@ -41,6 +41,39 @@ class Sensor(db.Model):
     humidity = db.Column(db.Integer)
     rssi = db.Column(db.Integer)
 
+    TICKS_PER_SECOND= 4096
+    VOLTAGE= 3
+    POWER_CPU= 1.800 * VOLTAGE;       
+    POWER_LPM= 0.0545 * VOLTAGE;      
+    POWER_TRANSMIT= 17.7 * VOLTAGE;   
+    POWER_LISTEN= 20.0 * VOLTAGE;     
+
+
     def __repr__(self):
         return 'Create time {}'.format(self.created_date)
     
+    def to_dict(self):
+        data = {
+            'node_id': self.node_id,
+            'battery_voltage' : self.battery_voltage * 2 * 2.5 / 4096.0,
+            'light1': 10.0 * self.light1 / 7.0,
+            'light2': 46.0 * self.light2 / 7.0,
+            'temperature': -39.6 + 0.01 * self.temperature,
+            'humidity': -4.0 + 405.0 * self.humidity,
+            'latency': self.latency / 32678.0,
+            'rssi': self.rssi,
+            'best_neighbor': self.best_neighbor if self.best_neighbor > 0 else None,
+            'best_neighbor_etx': self.best_neighbor_etx / 8.0,
+            'cpu_power': (self.time_cpu * self.POWER_CPU) / (self.time_cpu + self.time_lpm),
+            'lpm_power': (self.time_lpm * self.POWER_LPM) / (self.time_cpu + self.time_lpm),
+            'listen_power': (self.time_listen * self.POWER_LISTEN) / (self.time_cpu + self.time_lpm),
+            'tranx_power': (self.time_transmit * self.POWER_TRANSMIT) / (self.time_cpu* self.time_lpm),
+            'average_power': (self.time_cpu * self.POWER_CPU + self.time_lpm * \
+                    self.POWER_LPM + self.time_listen * self.POWER_LISTEN +\
+                    self.time_transmit * self.POWER_TRANSMIT) / (self.time_cpu + self.time_lpm),
+            'power_time': 1000 * (self.time_cpu + self.time_lpm) / self.TICKS_PER_SECOND,
+            'sys_time': self.created_date,
+            'node_time': ((self.timestamp1 << 16) + self.timestamp2) * 1000L
+        }
+
+        return data

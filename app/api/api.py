@@ -9,13 +9,14 @@ def sensor_update():
     records = Sensor.query.group_by('node_id')
     sensor_data = []
     for record in records:
+        record = record.to_dict()
         sensor_data.append({
-            'node_id':  record.node_id, \
-            'battery_voltage':  record.battery_voltage, \
-            'light1':   record.light1, \
-            'light2':   record.light2, \
-            'temperature':  record.temperature, \
-            'humidity': record.humidity, \
-            'rssi': record.rssi \
+            'node_id':  record['node_id'], \
+            'battery_voltage':  record['battery_voltage'], \
+            'light1':   record['light1'], \
+            'light2':   record['light2'], \
+            'temperature':  record['temperature'], \
+            'humidity': record['humidity'], \
+            'rssi': record['rssi'] \
             })
     return jsonify(sensor_data)
