@@ -73,7 +73,7 @@ class Sensor(db.Model):
                     self.time_transmit * self.POWER_TRANSMIT) / (self.time_cpu + self.time_lpm),
             'power_time': 1000 * (self.time_cpu + self.time_lpm) / self.TICKS_PER_SECOND,
             'sys_time': self.created_date,
-            'node_time': ((self.timestamp1 << 16) + self.timestamp2) * 1000L
+            'node_time': ((self.timestamp1 << 16) + self.timestamp2) * 1000
         }
 
         return data

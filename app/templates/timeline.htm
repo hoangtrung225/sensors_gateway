@@ -1,0 +1,60 @@
+{% extends "base.htm" %}
+{% block title %}Time line of Temperature{% endblock %}
+
+{% block content %}
+	<!-- bar chart canvas element -->
+	<div class="container">
+		<h1>Collect Control</h2>
+		{% for sensor in sensors%}
+		<button type="button" class="btn btn-primary active" data-toggle="buttons" aria-pressed="false" id='{{sensor}}'>Sensor {{sensor}}</button>
+		{% endfor %}
+		<button type="button" class="btn btn-primary" disabled>Stop collect</button>
+	</div>
+	<canvas id="line-chart" width="600" height="400"></canvas>
+{% endblock %}
+
+{% block scripts %}
+{{super()}}
+<script src="{{ url_for('static', filename='Chart.min.js') }}"></script>
+<script>
+//Chart.defaults.global.responsive = false;
+$("button").click(function(){
+	$.getJSON({
+		url: "/api/sensor/" + $(this).attr("id") + "/data",
+		dataType: "json",
+		success: function(data) {
+			// define the chart data
+				labels = [];
+				plots = [];
+				for (i = 0; i < data.length; i++){
+					labels.push(data[i]["sys_time"].substr(17, 8));
+					plots.push(data[i]["temperature"]);
+				}
+				new Chart(document.getElementById("line-chart"), {
+				  type: 'line',
+				  data: {
+					labels: labels,
+					datasets: [{ 
+						data: plots,
+						label: "Temperature",
+						borderColor: "#3e95cd",
+						fill: false
+					  }
+					]
+				  },
+				  options: {
+					legend: {
+						display: false
+					},
+					title: {
+					  	display: true,
+					  	text: 'Temperature over time'
+					}
+				  }
+				});
+		}
+	});
+});
+
+</script>
+{% endblock %}

@@ -26,3 +26,13 @@ def sensor_info():
             })
     print("[DEBUG]sensors data: {}".format(sensor_data))
     return render_template('sensor.htm', sensors=sensor_data)
+
+@app.route('/timeline')
+def sensor_timeline():
+    
+    records = Sensor.query.group_by('node_id')
+    sensors = []
+    for record in records:
+        sensors.append(record.node_id)
+
+    return render_template('timeline.htm', sensors=sensors)
