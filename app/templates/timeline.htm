@@ -9,6 +9,16 @@
 		<button type="button" class="btn btn-primary active" data-toggle="buttons" aria-pressed="false" id='{{sensor}}'>Sensor {{sensor}}</button>
 		{% endfor %}
 		<button type="button" class="btn btn-primary" disabled>Stop collect</button>
+
+		<div class="dropdown">
+		  <button class="btn dropdown-toggle" type="button" data-toggle="dropdown" style="height:35px;width:200px">Select View
+		  <span class="caret"></span></button>
+		  <ul class="dropdown-menu">
+			{%for view in views%}
+			<li class="option"><a href="#">{{view}}</a></li>
+			{% endfor %}
+		  </ul>
+		</div>	
 	</div>
 	<canvas id="line-chart" width="600" height="400"></canvas>
 {% endblock %}
@@ -18,17 +28,20 @@
 <script src="{{ url_for('static', filename='Chart.min.js') }}"></script>
 <script>
 //Chart.defaults.global.responsive = false;
-$("button").click(function(){
+$(".btn-primary").click(function(){
+	var selected = $(".dropdown-toggle").text();
 	$.getJSON({
-		url: "/api/sensor/" + $(this).attr("id") + "/data",
+		url: "/api/sensor/timeline/" + $(this).attr("id") + '/' + selected,
 		dataType: "json",
 		success: function(data) {
 			// define the chart data
 				labels = [];
 				plots = [];
-				for (i = 0; i < data.length; i++){
-					labels.push(data[i]["sys_time"].substr(17, 8));
-					plots.push(data[i]["temperature"]);
+				points=data["data"];
+				console.log(points)
+				for (i = 0; i < points.length; i++){
+					labels.push(points[i]["time"].substr(17, 8));
+					plots.push(points[i]["data"]);
 				}
 				new Chart(document.getElementById("line-chart"), {
 				  type: 'line',
@@ -36,7 +49,7 @@ $("button").click(function(){
 					labels: labels,
 					datasets: [{ 
 						data: plots,
-						label: "Temperature",
+						label: "Data " + data["view"] + " from sensor " + data["sensor"],
 						borderColor: "#3e95cd",
 						fill: false
 					  }
@@ -48,7 +61,7 @@ $("button").click(function(){
 					},
 					title: {
 					  	display: true,
-					  	text: 'Temperature over time'
+					  	text: "Data " + data["view"] + " from sensor " + data["sensor"]
 					}
 				  }
 				});
@@ -56,5 +69,9 @@ $("button").click(function(){
 	});
 });
 
+$(".dropdown ul li.option").click(function(){
+	$(".dropdown-toggle").text($(this).find("a").text());
+	console.log($(".dropdown-toggle"));
+});
 </script>
 {% endblock %}

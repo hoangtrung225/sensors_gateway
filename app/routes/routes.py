@@ -34,5 +34,6 @@ def sensor_timeline():
     sensors = []
     for record in records:
         sensors.append(record.node_id)
-
-    return render_template('timeline.htm', sensors=sensors)
+    
+    view_options = ['light1', 'light2', 'temperature', 'humidity']
+    return render_template('timeline.htm', sensors=sensors, views=view_options)

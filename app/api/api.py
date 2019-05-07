@@ -32,3 +32,22 @@ def get_sensor_data(node_id):
         sensor_data.append(data)
 
     return jsonify(sensor_data)
+
+@app.route('/api/sensor/timeline/<int:node_id>/<view>', methods=['GET'])
+def get_sensor_timeline(node_id, view):
+
+    if not view in ['light1', 'light2', 'temperature', 'humidity']:
+        return None
+    #query database get all record about sensor node
+    records = Sensor.query.filter(Sensor.node_id == node_id)
+    sensor_data = {"view": view, "sensor": node_id}
+    timeline_data = []
+    for record in records:
+        data = record.to_dict()
+        timeline_data.append({
+                "time": data["sys_time"],
+                "data": data.get(view)
+            })
+    sensor_data.update({"data": timeline_data})
+
+    return jsonify(sensor_data)
