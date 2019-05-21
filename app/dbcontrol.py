@@ -60,7 +60,7 @@ class SensorDB():
         if len(l) == 30:
             for field in SensorDB.dict_struct:
                 if l[counter].isdigit():
-                    sensor.update({field: l[counter]})
+                    sensor.update({field: int(l[counter])})
                 else:
                     return None
                 counter += 1
@@ -71,4 +71,5 @@ class SensorDB():
     @staticmethod
     def from_list(l):
         d = SensorDB.list_to_dict(l)
-        SensorDB.insert_data(d)
+        if d != None:
+            SensorDB.insert_data(d)

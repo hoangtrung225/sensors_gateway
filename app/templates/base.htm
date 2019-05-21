@@ -14,7 +14,7 @@
 		<li class="active"><a href="{{ url_for('index') }}">Home</a></li>
 		<li><a href="{{ url_for('sensor_info') }}">Sensor Info</a></li>
 		<li><a href="{{ url_for('sensor_timeline') }}">Sensor Timeline</a></li>
-      	<li><a href="#">Page 3</a></li>
+      	<li><a href="#">Network control</a></li>
     </ul>
   </div>
 </nav>
@@ -36,8 +36,11 @@
 					var found = false;
 					table.find('tr').each(function (key, val) {
 							if ($(this).find("#node_id").text() == sensor["node_id"]){
+								var row = $(this);
+								console.log(row)
 								$.each(sensor, function(key, value){
-									$(this).find(key).replaceWith(value);
+									console.log(row.find("#td" + key))
+									row.find("td#" + key).html(Math.round(value * 1000) / 1000);
 								})
 								found = true;
 								console.log("[DEBUG]Insert to " + $(this).find("#node_id").text());
