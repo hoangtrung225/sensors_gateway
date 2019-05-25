@@ -4,7 +4,7 @@
 {% block content %}
 	<!-- bar chart canvas element -->
 	<div class="container">
-		<h1>Collect Control</h2>
+		<h2>Collect Control</h2>
 		{% for sensor in sensors%}
 		<button type="button" class="btn btn-primary active" data-toggle="buttons" aria-pressed="false" id='{{sensor}}'>Sensor {{sensor}}</button>
 		{% endfor %}
@@ -20,7 +20,7 @@
 		  </ul>
 		</div>	
 	</div>
-	<canvas id="line-chart" width="600" height="400"></canvas>
+	<canvas id="line-chart" width="800" height="600"></canvas>
 {% endblock %}
 
 {% block scripts %}
@@ -56,12 +56,14 @@ $(".btn-primary").click(function(){
 					]
 				  },
 				  options: {
+					//responsive: false,
 					legend: {
 						display: false
 					},
 					title: {
 					  	display: true,
-					  	text: "Data " + data["view"] + " from sensor " + data["sensor"]
+					  	text: data["view"].toUpperCase() + " from SENSOR " + data["sensor"],
+						fontSize: 30
 					}
 				  }
 				});

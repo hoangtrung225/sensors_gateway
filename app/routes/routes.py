@@ -1,11 +1,15 @@
 from app import app
 from flask import render_template
 from app.models import Sensor
+from app.sys_info import SystemInfo
 
 @app.route('/')
 @app.route('/index', methods=['GET'])
 def index():
-    return render_template('index.htm')
+    network = SystemInfo.network_info()
+    system = SystemInfo.system_info()
+    processes = SystemInfo.system_process()
+    return render_template('index.htm', network=network, system=system, processes=processes)
 
 @app.route('/sensor')
 def sensor_info():
