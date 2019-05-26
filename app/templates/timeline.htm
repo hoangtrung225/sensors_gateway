@@ -6,10 +6,8 @@
 	<div class="container">
 		<h2>Collect Control</h2>
 		{% for sensor in sensors%}
-		<button type="button" class="btn btn-primary active" data-toggle="buttons" aria-pressed="false" id='{{sensor}}'>Sensor {{sensor}}</button>
+		<button type="button" class="btn btn-primary active" data-toggle="buttons" aria-pressed="true" id='{{sensor}}'>Sensor {{sensor}}</button>
 		{% endfor %}
-		<button type="button" class="btn btn-primary" disabled>Stop collect</button>
-
 		<div class="dropdown">
 		  <button class="btn dropdown-toggle" type="button" data-toggle="dropdown" style="height:35px;width:200px">Select View
 		  <span class="caret"></span></button>
@@ -27,53 +25,77 @@
 {{super()}}
 <script src="{{ url_for('static', filename='Chart.min.js') }}"></script>
 <script>
+var chartObject;
 //Chart.defaults.global.responsive = false;
 $(".btn-primary").click(function(){
 	var selected = $(".dropdown-toggle").text();
 	$.getJSON({
 		url: "/api/sensor/timeline/" + $(this).attr("id") + '/' + selected,
 		dataType: "json",
-		success: function(data) {
-			// define the chart data
-				labels = [];
-				plots = [];
-				points=data["data"];
-				console.log(points)
-				for (i = 0; i < points.length; i++){
-					labels.push(points[i]["time"].substr(17, 8));
-					plots.push(points[i]["data"]);
-				}
-				new Chart(document.getElementById("line-chart"), {
-				  type: 'line',
-				  data: {
-					labels: labels,
-					datasets: [{ 
-						data: plots,
-						label: "Data " + data["view"] + " from sensor " + data["sensor"],
-						borderColor: "#3e95cd",
-						fill: false
-					  }
-					]
-				  },
-				  options: {
-					//responsive: false,
-					legend: {
-						display: false
-					},
-					title: {
-					  	display: true,
-					  	text: data["view"].toUpperCase() + " from SENSOR " + data["sensor"],
-						fontSize: 30
-					}
-				  }
-				});
+		success: function(data){
+			console.log(chartObject);
+			if (chartObject != null){
+				chartObject.destroy();
+			}
+			chartObject = createChart(data);
 		}
 	});
 });
 
+$(".btn.btn-primary").click(function() {
+	$(".btn.btn-primary").each(function() {
+		if ($(this).prop("disabled") == true){
+			$(this).attr("disabled", false);
+		}
+	})
+	$(this).attr("disabled", true);
+});
+
 $(".dropdown ul li.option").click(function(){
 	$(".dropdown-toggle").text($(this).find("a").text());
-	console.log($(".dropdown-toggle"));
+	console.log($(".btn.btn-primary.active"));
+	$(".btn.btn-primary").each(function() {
+		if ($(this).prop("disabled") == true){
+			$(this).attr("disabled", false);
+		}
+	})
 });
+
+function createChart(data, chartObj) {
+		// define the chart data
+		labels = [];
+		plots = [];
+		points=data["data"];
+		for (i = 0; i < points.length; i++){
+			labels.push(points[i]["time"].substr(17, 8));
+			plots.push(points[i]["data"]);
+		}
+		chartObj = new Chart(document.getElementById("line-chart"), {
+		  type: 'line',
+		  data: {
+			labels: labels,
+			datasets: [{ 
+				data: plots,
+				label: "Data " + data["view"] + " from sensor " + data["sensor"],
+				borderColor: "#3e95cd",
+				fill: false
+			  }
+			]
+		  },
+		  options: {
+			//responsive: false,
+			//events: ['click'],
+			legend: {
+				display: false
+			},
+			title: {
+				display: true,
+				text: data["view"].toUpperCase() + " from SENSOR " + data["sensor"],
+				fontSize: 30
+			}
+		  }
+		});
+		return chartObj;
+}
 </script>
 {% endblock %}

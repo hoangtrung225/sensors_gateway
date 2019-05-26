@@ -22,16 +22,16 @@
 			<td valign="top">
 				<table id=system_info class="table" border="0">
 					<tr><span style="font-weight:bold">SYSTEM INFO</span></tr>
-					<tr><td>CPU usage</td><td>{{system.cpu}}</td></tr>
-					<tr><td>Memory usage</td><td>{{system.memory}}</td></tr>
-					<tr><td>Disk usage</td><td>{{system.disk}}</td></tr>
+					<tr><td>CPU usage</td><td>{{system.cpu}} %</td></tr>
+					<tr><td>Memory usage</td><td>{{system.memory}} %</td></tr>
+					<tr><td>Disk usage</td><td>{{system.disk}} %</td></tr>
 					<tr><td>System uptime</td><td>{{system.uptime}}</td></tr>
 				</table>
 			</td>
 			<td valign="top">
 				<table id=processes class="table table-striped">
 					<tr><span style="font-weight:bold">PROCESSES</span></tr>
-					<tr><td>pid</td><td>name</td><td>num_threads</td><td>cpu percent</td><td>status</td></tr>
+					<tr><td>pid</td><td>name</td><td>num threads</td><td>cpu percent</td><td>status</td></tr>
 					{% for process in processes %}
 					<tr><td>{{ process.pid }}</td><td>{{ process.name }}</td><td>{{ process.num_threads }}</td><td>{{ process.cpu_percent }}</td><td>{{ process.status }}</td></tr>
 					{% endfor %}

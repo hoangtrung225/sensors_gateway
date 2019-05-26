@@ -64,7 +64,7 @@ class Sensor(db.Model):
             'light1': 10.0 * self.light1 / 7.0,
             'light2': 46.0 * self.light2 / 7.0,
             'temperature': -39.6 + 0.01 * self.temperature,
-            'humidity': -4.0 + 405.0 * self.humidity,
+            'humidity': -4.0 + 405.0 * self.humidity / 10000,
             'latency': self.latency / 32678.0,
             'rssi': self.rssi,
             'best_neighbor': self.best_neighbor if self.best_neighbor > 0 else None,
