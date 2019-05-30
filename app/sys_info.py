@@ -1,18 +1,37 @@
 import psutil
 import datetime
+import socket
 
 class SystemInfo():
-    WLAN_IFACE = "wlan0"
+    
+    def __init__(self):
+        self.WLAN_IFACE = self.get_wireless_iface()
 
     @staticmethod
-    def network_info():
-        wlan = psutil.net_if_addrs()[SystemInfo.WLAN_IFACE]
-        network_info = {
-                    'address': wlan[0][1],
-                    'netmask': wlan[0][2],
-                    'broadcast': wlan[0][3],
-                    'mac': wlan[1][1]
-                }
+    def get_wireless_iface():
+        ifaces = psutil.net_if_addrs()
+        # loop through ifaces and return wireless interface name
+        iface_found = None
+        for iface in ifaces:
+            if iface.startswith("wl"):
+                iface_found = iface
+
+        return iface_found
+
+    def network_info(self):
+        wlan = psutil.net_if_addrs()[self.WLAN_IFACE]
+        network_info = {}
+        # network_info = {
+        #             'address': wlan[0][1],
+        #             'netmask': wlan[0][2],
+        #             'broadcast': wlan[0][3],
+        #             'mac': wlan[1][1]
+        #         }
+        for AF in wlan:
+            if AF[0] == socket.AF_INET:
+                network_info.update({"address": AF[1], "netmask": AF[2], "broadcast": AF[3]})
+            elif AF[0] == socket.AF_PACKET:
+                network_info.update({"mac": AF[1]})
         return network_info
     
     @staticmethod
@@ -24,13 +43,14 @@ class SystemInfo():
                     'uptime': datetime.datetime.fromtimestamp(psutil.boot_time())
                 }
         return system_info
-
+    
     @staticmethod
     def system_process():
         processes = []
         for process in psutil.process_iter():
-            if process.username() == 'pi':
+            if process.username() != 'root':
                     process_info = {
+                        "username": process.username(),
                         "pid": process.pid,
                         "name": process.name(),
                         "status": process.status(),

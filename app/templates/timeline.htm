@@ -94,8 +94,10 @@ function createChart(data, chartObj) {
 		labels = [];
 		plots = [];
 		points=data["data"];
+		var date; 
 		for (i = 0; i < points.length; i++){
-			labels.push(points[i]["time"].substr(17, 8));
+			date = new Date(points[i]["time"]);
+			labels.push(date.toString().substring(15, 25));
 			plots.push(points[i]["data"]);
 		}
 		chartObj = new Chart(document.getElementById("line-chart"), {

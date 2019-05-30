@@ -32,49 +32,4 @@
 </nav>
 {% endblock %}
 
-{% block scripts %}
-{{super()}}
 
-<script>
-	function executeQuery() {
-		$.getJSON({
-			url: "{{url_for('sensor_update')}}",
-			dataType: "json",
-			success: function(data) {
-
-				//loop table and insert element
-				var table = $("#sensors_table");
-				$.each(data, function(key, sensor){
-					var found = false;
-					table.find('tr').each(function (key, val) {
-							if ($(this).find("#node_id").text() == sensor["node_id"]){
-								var row = $(this);
-								$.each(sensor, function(key, value){
-									row.find("td#" + key).html(Math.round(value * 1000) / 1000);
-								})
-								found = true;
-							}
-					})
-
-					if (found == false){
-						var row = $('<tr>')
-						$.each(sensor, function(key, value){
-							row.append($('<td id=' + key + '>' + value + '</td>'));
-						})
-						console.log("Append new row");
-						table.append(row);	
-					}
-				})
-			}
-		});
-		if ($(location).attr('pathname') == "{{ url_for('sensor_info') }}"){
-			setTimeout(executeQuery, 5000); // you could choose not to continue on failure...
-		}
-	}
-
-	$(document).ready(function() {
-		// run the first time; all subsequent calls will take care of themselves
-		setTimeout(executeQuery, 5000);
-	});
-</script>
-{% endblock %} 

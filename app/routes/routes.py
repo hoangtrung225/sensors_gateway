@@ -2,13 +2,15 @@ from app import app
 from flask import render_template
 from app.models import Sensor
 from app.sys_info import SystemInfo
+import time
 
 @app.route('/')
 @app.route('/index', methods=['GET'])
 def index():
-    network = SystemInfo.network_info()
-    system = SystemInfo.system_info()
-    processes = SystemInfo.system_process()
+    system_info = SystemInfo()
+    network = system_info.network_info()
+    system = system_info.system_info()
+    processes = system_info.system_process()
     return render_template('index.htm', network=network, system=system, processes=processes)
 
 @app.route('/sensor')
@@ -26,7 +28,8 @@ def sensor_info():
             'light2':   record['light2'], \
             'temperature':  record['temperature'], \
             'humidity': record['humidity'], \
-            'rssi': record['rssi'] \
+            'rssi': record['rssi'], \
+            'timestamp': record['sys_time'].strftime("%z %a %b %d %Y %H:%M:%S")
             })
     print("[DEBUG]sensors data: {}".format(sensor_data))
     return render_template('sensor.htm', sensors=sensor_data)

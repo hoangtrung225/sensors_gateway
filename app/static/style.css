@@ -2,4 +2,5 @@ body { padding-top: 70px; }
 #control
 {
     display: flex;
-} 
+}
+.bgcolorpink { background: rgba(255, 0, 0, 0.5); }

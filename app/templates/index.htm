@@ -31,9 +31,9 @@
 			<td valign="top">
 				<table id=processes class="table table-striped">
 					<tr><span style="font-weight:bold">PROCESSES</span></tr>
-					<tr><td>pid</td><td>name</td><td>num threads</td><td>cpu percent</td><td>status</td></tr>
+					<tr><td>username</td><td>pid</td><td>name</td><td>num threads</td><td>cpu percent</td><td>status</td></tr>
 					{% for process in processes %}
-					<tr><td>{{ process.pid }}</td><td>{{ process.name }}</td><td>{{ process.num_threads }}</td><td>{{ process.cpu_percent }}</td><td>{{ process.status }}</td></tr>
+					<tr><td>{{ process.username }}</td><td>{{ process.pid }}</td><td>{{ process.name }}</td><td>{{ process.num_threads }}</td><td>{{ process.cpu_percent }}</td><td>{{ process.status }}</td></tr>
 					{% endfor %}
 				</table>
 			</td>

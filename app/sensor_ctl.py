@@ -11,7 +11,7 @@ import time
 
 class SensorCtl():
 
-    DEFAULT_INTERFACE = '/dev/ttyUSB0'
+    DEFAULT_INTERFACE = '/dev/ttyUSB1'
     DEFAULT_BAUD = 115200
 
     def __init__(self, interface=DEFAULT_INTERFACE, baudrate=DEFAULT_BAUD):
@@ -48,7 +48,7 @@ class SensorCtl():
             self.lock.acquire()
             if not self.wait_cmd:
                 print("[DEBUG]inside while loop")
-                sensor_data = self.sensor_ctl.readline().split()
+                sensor_data = self.sensor_ctl.read_until(b"\r\n")
                 print("[DEBUG] {}".format(sensor_data))
                 if len(sensor_data) == 30:
                     print("[DEBUG]Insert sensor data to Database")
@@ -62,7 +62,7 @@ class SensorCtl():
         self.lock.acquire()
         self.wait_cmd = True
         self.sensor_ctl.write(cmd)
-        data = self.sensor_ctl.read_until(b"Contiki>\r\n")
+        data = self.sensor_ctl.read_until(b"Contiki> \r\n")
         print("read data: {}".format(data))
         self.wait_cmd = False
         self.lock.release()
@@ -73,11 +73,12 @@ class SensorCtl():
 
 if __name__ == '__main__':
     ctl = SensorCtl()
+    time.sleep(15)
     ctl.run()
-    # count = 0
-    # print("[DEBUG]inside main")
-    # while True:
-    #     ctl.send_cmd(str.encode("netcmd {blink 1}\n"))
-    #     print("[DEBUG]Inside thread {}".format(count))
-    #     count+=count
-    #     time.sleep(5)
+    count = 0
+    print("[DEBUG]inside main")
+    while True:
+        ctl.send_cmd(str.encode("netcmd {blink 1}\n"))
+        print("[DEBUG]Inside thread {}".format(count))
+        count+=count
+        time.sleep(5)
