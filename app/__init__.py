@@ -11,5 +11,5 @@ migrate = Migrate(app, db)
 Bootstrap(app)
 
 from app.routes import routes
-from app.api import sensor_data, sensor_timeline, sensor_update
+from app.api import sensor_data, sensor_timeline, sensor_update, sensor_control
 from app import models

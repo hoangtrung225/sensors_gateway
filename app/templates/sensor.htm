@@ -5,8 +5,9 @@
 
 	<div class="container">
 		<h2>Network realtime monitor</h2>
-		<button type="button" class="btn btn-primary active">Start collect</button>
-		<button type="button" class="btn btn-primary" disabled>Stop collect</button>
+		<button type="button" class="btn btn-primary active" id="start">Start collect</button>
+		<button type="button" class="btn btn-primary" disabled id="stop">Stop collect</button>
+		<button type="button" class="btn btn-danger" id="blink">Blink LED</button>
 	</div>
  	<table id="sensors_table" style="width:100%" class="table table-responsive">
   <tr>
@@ -41,7 +42,32 @@
 {{super()}}
 
 <script>
+	$(".btn-primary").click(function(){
+		$.getJSON({
+			url: "/api/control/network/" + $(this).attr("id"),
+			dataType: "json",
+			success: function(data){
+				console.log(data);
+			}
+		});
+		
+		$(".btn.btn-primary").each(function() {
+			if ($(this).prop("disabled") == true){
+				$(this).attr("disabled", false);
+			}
+		})
+		$(this).attr("disabled", true);
+	});
 
+	$(".btn-danger").click(function(){
+		$.getJSON({
+			url: "/api/control/network/" + $(this).attr("id"),
+			dataType: "json",
+			success: function(data){
+				console.log(data);
+			}
+		});
+	});
 	function executeQuery() {
 		$.getJSON({
 			url: "{{url_for('sensor_update')}}",
