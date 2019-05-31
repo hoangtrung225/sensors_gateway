@@ -105,9 +105,14 @@
 
 					if (found == false){
 						var row = $('<tr>')
-						$.each(sensor, function(key, value){
-							row.append($('<td id=' + key + '>' + value + '</td>'));
-						})
+						row.append($('<td id=' + 'timestamp' + '>' + sensor['timestamp'] + '</td>'));
+						row.append($('<td id=' + 'node_id' + '>' + sensor['node_id'] + '</td>'));
+						row.append($('<td id=' + 'battery_voltage' + '>' + sensor['battery_voltage'] + '</td>'));
+						row.append($('<td id=' + 'light1' + '>' + sensor['light1'] + '</td>'));
+						row.append($('<td id=' + 'light2' + '>' + sensor['light2'] + '</td>'));
+						row.append($('<td id=' + 'temperature' + '>' + sensor['temperature'] + '</td>'));
+						row.append($('<td id=' + 'humidity' + '>' + sensor['humidity'] + '</td>'));
+						row.append($('<td id=' + 'rssi' + '>' + sensor['rssi'] + '</td>'));
 						console.log("Append new row");
 						table.append(row);	
 					}

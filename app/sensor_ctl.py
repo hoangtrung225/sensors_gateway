@@ -26,6 +26,9 @@ class SensorCtl():
         self.lock = threading.Semaphore()
         self.db_control = dbcontrol.SensorDB()
         self.threads = []
+        self.buffer = b""
+        self.collect = False
+        self.collect_thread = None
 
     def threaded(fn):
         """define thread wraper function"""
@@ -52,9 +55,10 @@ class SensorCtl():
         self.sensor_ctl.write(str.encode("collect | timestamp | binprint &\n"))
         #self.sensor_ctl.write(str.encode("repeat 0 60 { randwait 60 collect-view-data | send 31 }\n"))
         self.sensor_ctl.write(str.encode("netcmd { repeat 0 20 { randwait 20 collect-view-data | blink | send }& }\n"))
+        self.collect = True
 
         #run forever read data from serial interface push to database 
-        while True:
+        while self.collect:
             self.lock.acquire()
             if not self.wait_cmd:
                 print("[DEBUG]inside while loop")
@@ -66,17 +70,16 @@ class SensorCtl():
             self.lock.release()
             time.sleep(1)
 
-    @threaded
     def send_cmd(self, cmd):
         #send command wait to read response and return
         self.lock.acquire()
         self.wait_cmd = True
+        self.buffer = self.sensor_ctl.read_until(b"Contiki> \r\n")
         self.sensor_ctl.write(str.encode(cmd))
-        data = self.sensor_ctl.read_until(b"Contiki> \r\n")
-        print("read data: {}".format(data))
+        self.buffer = self.sensor_ctl.read_until(b"Contiki> \r\n")
         self.wait_cmd = False
         self.lock.release()
-        return data
+        return self.buffer
     
     def run(self):
         collect_thread = self.collect_data()

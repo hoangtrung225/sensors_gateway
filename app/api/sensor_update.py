@@ -11,6 +11,7 @@ def sensor_update():
     for record in records:
         record = record.to_dict()
         sensor_data.append({
+            'timestamp': record['sys_time'],
             'node_id':  record['node_id'], \
             'battery_voltage':  record['battery_voltage'], \
             'light1':   record['light1'], \
@@ -18,7 +19,6 @@ def sensor_update():
             'temperature':  record['temperature'], \
             'humidity': record['humidity'], \
             'rssi': record['rssi'], \
-            'timestamp': record['sys_time']
             })
     return jsonify(sensor_data)
 

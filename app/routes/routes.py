@@ -44,3 +44,8 @@ def sensor_timeline():
     
     view_options = ['light1', 'light2', 'temperature', 'humidity']
     return render_template('timeline.htm', sensors=sensors, views=view_options)
+    
+@app.route('/control')
+def sensor_control():
+    
+    return render_template('control.htm')

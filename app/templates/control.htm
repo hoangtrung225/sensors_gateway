@@ -1,0 +1,40 @@
+{% extends "base.htm" %}
+{% block title %}This is an sensor data page{% endblock %}
+
+{% block content %}
+
+	<h2>Network Control</h2>
+	<div class="input-group">
+		<input type="text" class="form-control" id="cmd" style="height:35px;width:200px" placeholder="Command">
+		<span class="input-group-btn pull-left">
+			<button type="button" class="btn btn-primary active" id="run">Run</button>
+		</span>
+	</div>	
+
+	<div class="command-box">
+	  <label for="comment">Return from command:</label>
+		<textarea class="form-control" rows="25" id="output" readonly></textarea>
+	</div>
+{% endblock %}
+
+
+{% block scripts %}
+{{super()}}
+
+<script>
+	$("#run").click(function(){
+		$("#output").prop("readonly", false);
+		var cmd = $("#cmd").val()
+		$.getJSON({
+			url: "/api/control/sensor" + "?query=" + cmd,
+			dataType: "json",
+			success: function(data){
+				console.log(data);
+				$("#output").html(data["data"]);
+			}
+		});
+		$("#output").prop("readonly", true);
+	});
+		
+</script>
+{% endblock %} 
